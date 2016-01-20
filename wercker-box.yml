@@ -1,0 +1,21 @@
+name: box-appengine 
+version: 1.9.32
+inherits: wercker/python@1.1.0
+type: main
+platform: ubuntu@12.04
+description: Wercker box for Python Appengine
+keywords:
+  - app engine
+  - appengine
+  - python
+  - python2.7
+script: |
+  sudo apt-get update -qq
+  sudo apt-get install unzip -y
+  curl -s -o google_appengine.zip https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.31.zip
+  sudo unzip -q google_appengine.zip -d /usr/local
+  rm google_appengine.zip
+  sudo patch -d /usr/local/google_appengine/lib/endpoints-1.0/endpoints -p0 -i $PWD/endpoints.patch
+  sudo pip install --quiet -r requirements.txt
+env:
+  GOOGLE_APPENGINE: /usr/local/google_appengine
